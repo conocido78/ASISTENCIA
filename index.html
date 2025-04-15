@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASISTENCIA CINE</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif; /* Fuente moderna y legible */
+            background: linear-gradient(135deg, #2c3e50, #000000); /* Degradado oscuro y elegante */
+            color: #ecf0f1; /* Texto claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7); /* Contenedor semi-transparente oscuro */
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #f39c12; /* Amarillo mostaza para acento */
+            margin-bottom: 40px;
+            font-size: 3em;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra en el título */
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            color: #ddd;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 15px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background-color: #444;
+            color: #eee;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #f39c12; /* Resaltar al enfocar */
+        }
+
+        button[type="submit"] {
+            background-color: #e74c3c; /* Rojo más vivo */
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px); /* Ligeramente elevado al pasar el ratón */
+        }
+
+        .message-container {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .success-message {
+            color: #2ecc71; /* Verde éxito */
+        }
+
+        .error-message {
+            color: #e74c3c; /* Rojo error */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>ASISTENCIA CINE</h1>
+        <form id="registroForm">
+            <div class="form-group">
+                <label for="nombre_completo">Nombre Completo:</label>
+                <input type="text" id="nombre_completo" name="nombre_completo" required>
+            </div>
+            <div class="form-group">
+                <label for="codigo_estudiante">Código de Estudiante:</label>
+                <input type="text" id="codigo_estudiante" name="codigo_estudiante" required>
+            </div>
+            <div class="form-group">
+                <label for="paralelo">Paralelo:</label>
+                <input type="text" id="paralelo" name="paralelo" required>
+            </div>
+            <div class="form-group">
+                <label for="semestre">Semestre:</label>
+                <input type="text" id="semestre" name="semestre" required>
+            </div>
+            <div class="form-group">
+                <label for="codigo_ticket">Código del Ticket:</label>
+                <input type="text" id="codigo_ticket" name="codigo_ticket" required>
+            </div>
+            <button type="submit">Registrar Asistencia</button>
+        </form>
+        <div id="mensaje" class="message-container"></div>
+    </div>
+
+    <script>
+        const registroForm = document.getElementById('registroForm');
+        const mensajeDiv = document.getElementById('mensaje');
+        const codigosUnicos = [
+            "CINE2025-001", "FILM2025-002", "TICKET-003", "ASISTE-004", "SESION-005",
+            "VERCINE-006", "PANTALLA-007", "BUTACA-008", "PROYECCION-009", "ESTRENO-010",
+            "CLAQUETA-011", "ACCION-012", "CORTE-013", "LUCES-014", "SONIDO-015",
+            "CAMARA-016", "DIRECTOR-017", "ACTOR-018", "ESCENA-019", "GUION-020",
+            "PALOMITAS-021", "REFRESCO-022", "CINEPOLIS-023", "CINEMARK-024", "UVK-025",
+            "SUPERCINE-026", "MEGAFILMS-027", "STARCINE-028", "HOLLYWOOD-029", "BOLLYWOOD-030",
+            "ANIMACION-031", "DRAMA-032", "COMEDIA-033", "TERROR-034", "CIENCIAFIC-035",
+            "AVENTURA-036", "ROMANCE-037", "SUSPENSO-038", "FANTASIA-039", "MUSICAL-040",
+            "OSCAR-041", "GOYA-042", "BAFTA-043", "CANNES-044", "VENECIA-045",
+            "BERLIN-046", "SUNDANCE-047", "TORONTO-048", "SANSEBASTIAN-049", "LOCARNO-050",
+            "PELICULA-051", "CORTOMETRAJE-052", "DOCUMENTAL-053", "LARGOMETRAJE-054", "TRAILER-055",
+            "CRITICA-056", "ESPECTADOR-057", "PRODUCCION-058", "DISTRIBUCION-059", "EDICION-060",
+            "FOTOGRAFIA-061", "VESTUARIO-062", "MAQUILLAJE-063", "EFECTOS-064", "BANDA-065",
+            "DOBLAJE-066", "SUBTITULOS-067", "FORMATO-068", "3D-069", "IMAX-070",
+            "ATMOS-071", "DOLBY-072", "PANTALLAGIGANTE-073", "SALADEARTE-074", "CINECLUB-075",
+            "CINEFORUM-076", "RETROSPECTIVA-077", "CICLO-078", "MUESTRA-079", "FESTIVAL-080",
+            "PREMIER-081", "INVITACION-082", "PROMOCION-083", "DESCUENTO-084", "GRATIS-085",
+            "PALCO-086", "PLATEA-087", "ANFITEATRO-088", "GALERIA-089", "FILA-090",
+            "ASIENTO-091", "ENTRADA-092", "BOLETO-093", "TAQUILLA-094", "RESERVACION-095",
+            "COMIDA-096", "BEBIDA-097", "SNACKS-098", "GOLOSINAS-099", "MENU-100",
+            "CINEASTA-101", "CINEMATOGRAFIA-102", "FILMOGRAFIA-103", "RODAJE-104", "POSTPRODUCCION-105",
+            "MAKINGOF-106", "DETRASDECAMARAS-107", "CASTING-108", "LOCACION-109", "UTILERIA-110",
+            "ESCENOGRAFIA-111", "MONTAJE-112", "NARRATIVA-113", "PERSONAJE-114", "ANTAGONISTA-115",
+            "PROTAGONISTA-116", "SECUNDARIO-117", "EXTRAS-118", "FIGURANTE-119", "DOBLE-120",
+            "GENERO-121", "SUBGENERO-122", "TEMATICA-123", "SIMBOLOGIA-124", "METAFORA-125",
+            "ANALISIS-126", "INTERPRETACION-127", "DECONSTRUCCION-128", "SEMIOTICA-129", "ESTETICA-130",
+            "VANGUARDIA-131", "NEORREALISMO-132", "NOUVELLEVAGUE-133", "EXPRESIONISMO-134", "SURREALISMO-135",
+            "CINECLASICO-136", "CINECONTEMPORANEO-137", "CINEINDEPENDIENTE-138", "CINEDEARTE-139", "CINEEXPERIMENTAL-140",
+            "ANIMATRONICA-141", "CGI-142", "EFECTOSVISUALES-143", "PANTALLA VERDE-144", "MOTIONCAPTURE-145",
+            "BANDA SONORA ORIGINAL-146", "MUSICA INCIDENTAL-147", "DISEÑO SONORO-148", "MEZCLA DE SONIDO-149", "FOLEY-150",
+            "GUIONISTA-151", "PRODUCTOR-152", "EDITOR-153", "FOTOGRAFO-154", "COMPOSITOR-155",
+            "DISEÑADORDEPRODUCCION-156", "DIRECTORDEARTE-157", "FIGURINISTA-158", "MAQUILLADOR-159", "SONIDISTA-160",
+            "AGENTE-161", "REPRESENTANTE-162", "DISTRIBUIDORA-163", "EXHIBIDORA-164", "CRITICO-165",
+            "BLOGGER-166", "PODCASTER-167", "YOUTUBER-168", "INFLUENCER-169", "SEGUIDOR-170",
+            "COMUNIDAD-171", "FORO-172", "DEBATE-173", "DISCUSION-174", "OPINION-175",
+            "RECOMENDACION-176", "CALIFICACION-177", "PUNTUACION-178", "RESEÑA-179", "SPOILER-180",
+            "FAN-181", "SEGUIDOR-182", "ENTUSIASTA-183", "COLECCIONISTA-184", "MEMORABILIA-185",
+            "MERCHANDISING-186", "SOUVENIR-187", "POSTER-188", "DVD-189", "BLURAY-190",
+            "STREAMING-191", "PLATAFORMA-192", "CONTENIDO-193", "SERIE-194", "TEMPORADA-195",
+            "EPISODIO-196", "PILOTO-197", "FINAL-198", "RECAPITULACION-199", "BINGEWATCHING-200"
+        ];
+        const codigosUsadosSimulacion = [];
+
+        registroForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nombreCompleto = document.getElementById('nombre_completo').value;
+            const codigoEstudiante = document.getElementById('codigo_estudiante').value;
+            const paralelo = document.getElementById('paralelo').value;
+            const semestre = document.getElementById('semestre').value;
+            const codigoTicket = document.getElementById('codigo_ticket').value;
+
+            mensajeDiv.textContent = ''; // Limpiar mensajes previos
+
+            if (codigosUnicos.includes(codigoTicket) && !codigosUsadosSimulacion.includes(codigoTicket)) {
+                // Simulación de marcar el código como usado
+                const index = codigosUnicos.indexOf(codigoTicket);
+                if (index > -1) {
+                    codigosUnicos.splice(index, 1);
+                    codigosUsadosSimulacion.push(codigoTicket);
+                }
+                mensajeDiv.className = 'success-message';
+                mensajeDiv.textContent = 'Asistencia registrada exitosamente.';
+                registroForm.reset(); // Opcional: limpiar el formulario después del éxito
+            } else if (codigosUsadosSimulacion.includes(codigoTicket)) {
+                mensajeDiv.className = 'error-message';
+                mensajeDiv.textContent = 'El código del ticket ya ha sido utilizado.';
+            } else {
+                mensajeDiv.className = 'error-message';
+                mensajeDiv.textContent = 'El código del ticket ingresado no es válido.';
+            }
+        });
+    </script>
+</body>
+</html>
